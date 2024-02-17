@@ -1,6 +1,5 @@
-package com.ismail.my_shop_api.dtos;
+package com.ismail.shop.dtos;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,5 +44,7 @@ public class UserDTO {
 
     private String city;
 
-    private Set<String> roles = new HashSet<>();
+    private boolean enabled;
+
+    private Set<RoleDTO> roles = new HashSet<>();
 }

@@ -1,6 +1,6 @@
-package com.ismail.my_shop_api.repositories;
+package com.ismail.shop.repositories;
 
-import com.ismail.my_shop_api.entities.Role;
+import com.ismail.shop.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.ismail.my_shop_api.entities;
+package com.ismail.shop.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

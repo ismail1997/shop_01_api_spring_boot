@@ -1,4 +1,4 @@
-package com.ismail.my_shop_api.dtos;
+package com.ismail.shop.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

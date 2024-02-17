@@ -1,4 +1,4 @@
-package com.ismail.my_shop_api;
+package com.ismail.shop;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
