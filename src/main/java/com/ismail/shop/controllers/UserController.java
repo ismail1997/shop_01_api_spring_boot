@@ -2,6 +2,7 @@ package com.ismail.shop.controllers;
 
 
 import com.ismail.shop.dtos.UserDTO;
+import com.ismail.shop.dtos.UserPageDTO;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.UserService;
 import org.springframework.http.MediaType;
@@ -39,4 +40,12 @@ public class UserController {
     public void deleteUser(@PathVariable("id") Long id) throws UserNotFoundException {
         this.userService.deleteUserByID(id);
     }
+
+    @GetMapping("/page-users")
+    public UserPageDTO getPageOfUsers(
+            @RequestParam(name = "page",defaultValue = "0") int page ,
+            @RequestParam(name = "size", defaultValue = "10") int size ){
+        return  this.userService.getPageOfUsers(page,size);
+    }
+
 }

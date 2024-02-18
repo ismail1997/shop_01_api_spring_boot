@@ -7,11 +7,13 @@ import com.ismail.shop.mappers.RoleMapper;
 import com.ismail.shop.repositories.RoleRepository;
 import com.ismail.shop.services.RoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private RoleRepository roleRepository;

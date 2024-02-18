@@ -2,17 +2,22 @@ package com.ismail.shop.services.impl;
 
 
 import com.ismail.shop.dtos.UserDTO;
+import com.ismail.shop.dtos.UserPageDTO;
 import com.ismail.shop.entities.User;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.mappers.UserMapper;
 import com.ismail.shop.repositories.UserRepository;
 import com.ismail.shop.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
@@ -49,5 +54,26 @@ public class UserServiceImpl implements UserService {
     public void deleteUserByID(Long id) throws UserNotFoundException {
         User user = this.userRepository.findById(id).orElseThrow(()->new UserNotFoundException(String.format("Can not find user with this id %d ",id)));
         this.userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserPageDTO getPageOfUsers(int page , int size){
+        if(page< 0) page = 0;
+        if(size<0) size = 10;
+
+        Page<User> userPage = this.userRepository.findAll(PageRequest.of(page, size));
+
+        List<UserDTO> userDTOS = userPage.getContent().stream().map(user -> {
+            return this.userMapper.toDTO(user);
+        }).collect(Collectors.toList());
+
+        UserPageDTO userPageDTO = new UserPageDTO();
+        userPageDTO.setUserDTOS(userDTOS);
+        userPageDTO.setPageSize(size);
+        userPageDTO.setCurrentPage(page);
+        userPageDTO.setTotalPages(userPage.getTotalPages());
+
+
+        return userPageDTO;
     }
 }
