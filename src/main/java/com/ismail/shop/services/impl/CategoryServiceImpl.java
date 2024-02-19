@@ -1,11 +1,14 @@
 package com.ismail.shop.services.impl;
 
 import com.ismail.shop.dtos.CategoryDTO;
+import com.ismail.shop.dtos.CategoryPageDTO;
 import com.ismail.shop.entities.Category;
 import com.ismail.shop.exceptions.CategoryNotFoundException;
 import com.ismail.shop.mappers.CategoryMapper;
 import com.ismail.shop.repositories.CategoryRepository;
 import com.ismail.shop.services.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,4 +46,23 @@ public class CategoryServiceImpl implements CategoryService {
         Category savedCategory = this.categoryRepository.save(category);
         return this.mapper.fromEntity(savedCategory);
     }
+
+    @Override
+    public CategoryPageDTO getPageOfCategories(int page, int size)
+    {
+        if(page< 0) page = 0;
+        if(size<0) size = 10;
+        Page<Category> categoryPage = this.categoryRepository.findAll(PageRequest.of(page,size));
+
+        List<CategoryDTO> categoryDTOS = categoryPage.getContent()
+                .stream().map(category -> this.mapper.fromEntity(category)).collect(Collectors.toList());
+
+        CategoryPageDTO categoryPageDTO = new CategoryPageDTO();
+        categoryPageDTO.setCurrentPage(page);
+        categoryPageDTO.setPageSize(size);
+        categoryPageDTO.setTotalPages(categoryPage.getTotalPages());
+        categoryPageDTO.setCategoryDTOS(categoryDTOS);
+        return categoryPageDTO;
+    }
+
 }

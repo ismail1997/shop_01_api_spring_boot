@@ -8,10 +8,15 @@ import com.ismail.shop.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/users",produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/users")
 public class UserController {
     private UserService userService;
 
@@ -46,6 +51,17 @@ public class UserController {
             @RequestParam(name = "page",defaultValue = "0") int page ,
             @RequestParam(name = "size", defaultValue = "10") int size ){
         return  this.userService.getPageOfUsers(page,size);
+    }
+
+    @GetMapping(value = "/{id}/image",produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getImageOfUser(@PathVariable("id") Long id) throws UserNotFoundException, IOException {
+        UserDTO userDTO  = this.userService.getOneUserByID(id);
+        String photoName = userDTO.getPhotos();
+
+        File file = new File(System.getProperty("user.home")+"\\shop_api_images\\users\\"+userDTO.getId()+"\\"+photoName);
+
+        Path path = Paths.get(file.toURI());
+        return Files.readAllBytes(path);
     }
 
 }

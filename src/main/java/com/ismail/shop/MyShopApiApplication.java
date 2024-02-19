@@ -1,8 +1,10 @@
 package com.ismail.shop;
 
+import com.ismail.shop.entities.Brand;
 import com.ismail.shop.entities.Category;
 import com.ismail.shop.entities.Role;
 import com.ismail.shop.entities.User;
+import com.ismail.shop.repositories.BrandRepository;
 import com.ismail.shop.repositories.CategoryRepository;
 import com.ismail.shop.repositories.RoleRepository;
 import com.ismail.shop.repositories.UserRepository;
@@ -44,6 +46,7 @@ public class MyShopApiApplication {
                         .email(u+"@gmail.com")
                         .country("France")
                         .city("Paris")
+                        .photos("1")
                         .address("Paris Rue 2 ")
                         .password(u+"12345")
                         .build();
@@ -71,7 +74,21 @@ public class MyShopApiApplication {
     @Bean
     public CommandLineRunner categoryCommandLineRunner(CategoryRepository categoryRepository){
         return args -> {
-            Stream.of("Computers","SmartPhones","Printers","Electricity","Cosmetic","Electronics").forEach(c->{
+            Stream.of("Computers",
+                    "Smartphones",
+                    "Televisions",
+                    "Furniture",
+                    "Clothing",
+                    "Shoes",
+                    "Accessories",
+                    "Home Appliances",
+                    "Sports Equipment",
+                    "Books",
+                    "Toys",
+                    "Cosmetics",
+                    "Jewelry",
+                    "Automotive Parts",
+                    "Gardening Tools").forEach(c->{
                 Category category = new Category();
                 category.setAlias(c);
                 category.setEnabled(true);
@@ -79,6 +96,25 @@ public class MyShopApiApplication {
                 category.setImage(c+".png");
 
                 categoryRepository.save(category);
+            });
+        };
+    }
+
+    @Bean
+    public CommandLineRunner brandCommandLine(BrandRepository brandRepository){
+        return args -> {
+            Stream.of(
+                    "Apple", "Samsung", "Google", "Microsoft", "Sony",
+                    "Nike", "Adidas", "Puma", "Dell", "Huawei",
+                    "Xiaomi", "Intel", "Canon", "ASUS", "AMD",
+                    "Toyota", "Honda", "Ford", "BMW", "Mercedes-Benz"
+            ).forEach(brandName->{
+                Brand brand  = Brand
+                        .builder()
+                        .name(brandName)
+                        .logo(brandName.toLowerCase()+".png")
+                        .build();
+                brandRepository.save(brand);
             });
         };
     }
