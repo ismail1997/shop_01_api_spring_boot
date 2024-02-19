@@ -8,6 +8,7 @@ import com.ismail.shop.entities.Brand;
 import com.ismail.shop.exceptions.BrandNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.BrandService;
+import com.ismail.shop.utilities.Constants;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +21,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/brands")
-public class BrandController {
+public class BrandRestController {
     private BrandService brandService;
 
-    public BrandController(BrandService brandService) {
+    public BrandRestController(BrandService brandService) {
         this.brandService = brandService;
     }
 
@@ -60,7 +61,7 @@ public class BrandController {
         BrandDTO brandDTO  = this.brandService.getOneBrandByID(id);
         String photoName = brandDTO.getLogo();
 
-        File file = new File(System.getProperty("user.home")+"\\shop_api_images\\brands\\"+brandDTO.getId()+"\\"+photoName);
+        File file = new File(Constants.BRANDS_IMAGES +brandDTO.getId()+"\\"+photoName);
 
         Path path = Paths.get(file.toURI());
         return Files.readAllBytes(path);

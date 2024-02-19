@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,4 +78,17 @@ public class UserServiceImpl implements UserService {
 
         return userPageDTO;
     }
+
+    @Override
+    public boolean checkIfEmailAlreadyExisted(String email){
+        User user = this.userRepository.findByEmail(email.toLowerCase().trim());
+        return user != null;
+    }
+
+    public String uploadUserPhoto(Long id, MultipartFile file){
+        String fileName= StringUtils.cleanPath(file.getOriginalFilename());
+
+        return null;
+    }
+
 }

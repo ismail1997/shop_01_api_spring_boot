@@ -51,4 +51,29 @@ public class RoleServiceImpl implements RoleService {
         Role role = this.roleRepository.findById(id).orElseThrow(()->new RoleNotFoundException("Can not find any role with that "+id));
         this.roleRepository.deleteById(id);
     }
+
+    @Override
+    public RoleDTO updateRoleDto(Long id, RoleDTO roleDTO) throws RoleNotFoundException {
+        Role existingRole = this.roleRepository.findById(id).orElseThrow(()->new RoleNotFoundException("Can not find any role with that "+id));
+
+        if (roleDTO.getName() != null && !roleDTO.getName().isEmpty()) {
+            existingRole.setName(roleDTO.getName());
+        }
+        if (roleDTO.getDescription() != null && !roleDTO.getDescription().isEmpty()) {
+            existingRole.setDescription(roleDTO.getDescription());
+        }
+
+        Role updatedRole = this.roleRepository.save(existingRole);
+
+        return this.roleMapper.toDTO(updatedRole);
+    }
+
+    @Override
+    public boolean checkIfRoleExistedOrNot(String roleName) {
+        Role role = this.roleRepository.findByName(roleName.toUpperCase().trim());
+        if(role==null){
+            return false;
+        }
+        return true;
+    }
 }

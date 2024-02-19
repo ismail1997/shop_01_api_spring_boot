@@ -13,4 +13,6 @@ public interface UserService {
     void deleteUserByID(Long id) throws UserNotFoundException;
 
     UserPageDTO getPageOfUsers(int page, int size);
+
+    boolean checkIfEmailAlreadyExisted(String email);
 }

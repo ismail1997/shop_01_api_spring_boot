@@ -5,6 +5,7 @@ import com.ismail.shop.dtos.UserDTO;
 import com.ismail.shop.dtos.UserPageDTO;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.UserService;
+import com.ismail.shop.utilities.Constants;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
-public class UserController {
+public class UserRestController {
     private UserService userService;
 
-    public UserController(UserService userService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
     }
 
@@ -58,10 +59,15 @@ public class UserController {
         UserDTO userDTO  = this.userService.getOneUserByID(id);
         String photoName = userDTO.getPhotos();
 
-        File file = new File(System.getProperty("user.home")+"\\shop_api_images\\users\\"+userDTO.getId()+"\\"+photoName);
+        File file = new File(Constants.USERS_IMAGES +userDTO.getId()+"\\"+photoName);
 
         Path path = Paths.get(file.toURI());
         return Files.readAllBytes(path);
+    }
+
+    @GetMapping("/check-email-uniqueness/{email}")
+    public  boolean checkIfEmailAlreadyExisted(@PathVariable("email") String email){
+        return this.userService.checkIfEmailAlreadyExisted(email);
     }
 
 }

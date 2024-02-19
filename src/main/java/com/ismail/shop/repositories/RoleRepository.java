@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface RoleRepository extends JpaRepository<Role,Long> {
     @Query("SELECT r FROM Role r")
     Page<Role> findAll(Pageable pageable);
+
+    Role findByName(String name);
 }

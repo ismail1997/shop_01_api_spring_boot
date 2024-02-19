@@ -11,4 +11,8 @@ public interface RoleService {
     RoleDTO getOneRoleByID(Long id) throws RoleNotFoundException;
     RoleDTO createRole(RoleDTO roleDTO);
     void deleteRoleByID(Long id) throws RoleNotFoundException;
+
+    RoleDTO updateRoleDto(Long id, RoleDTO roleDTO) throws RoleNotFoundException;
+
+    boolean checkIfRoleExistedOrNot(String roleName);
 }

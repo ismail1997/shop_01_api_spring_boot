@@ -12,10 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/roles",produces = MediaType.APPLICATION_JSON_VALUE)
-public class RoleController {
+public class RoleRestController {
     private RoleService roleService;
 
-    public RoleController(RoleService roleService) {
+    public RoleRestController(RoleService roleService) {
         this.roleService = roleService;
     }
 
@@ -39,6 +39,17 @@ public class RoleController {
     @DeleteMapping("/{id}")
     public void deleteRoleByID(@PathVariable("id") Long id) throws RoleNotFoundException {
         this.roleService.deleteRoleByID(id);
+    }
+
+
+    @PutMapping("/{id}")
+    public RoleDTO updateRole(@PathVariable("id") Long id,@RequestBody RoleDTO roleDTO) throws RoleNotFoundException {
+        return this.roleService.updateRoleDto(id,roleDTO);
+    }
+
+    @GetMapping("/check-existence/{name}")
+    public boolean checkIfRoleExistedOrNot(@PathVariable("name") String name){
+        return this.roleService.checkIfRoleExistedOrNot(name);
     }
 
 }

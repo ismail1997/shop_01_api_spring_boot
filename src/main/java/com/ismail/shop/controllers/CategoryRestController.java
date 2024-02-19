@@ -6,6 +6,7 @@ import com.ismail.shop.dtos.UserDTO;
 import com.ismail.shop.exceptions.CategoryNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.CategoryService;
+import com.ismail.shop.utilities.Constants;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +19,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
-public class CategoryController {
+public class CategoryRestController {
     private CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryRestController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -51,7 +52,7 @@ public class CategoryController {
         CategoryDTO categoryDTO  = this.categoryService.getOneCategoryByID(id);
         String photoName = categoryDTO.getImage();
 
-        File file = new File(System.getProperty("user.home")+"\\shop_api_images\\categories\\"+categoryDTO.getId()+"\\"+photoName);
+        File file = new File(Constants.CATEGORIES_IMAGES +categoryDTO.getId()+"\\"+photoName);
 
         Path path = Paths.get(file.toURI());
         return Files.readAllBytes(path);

@@ -28,7 +28,7 @@ public class MyShopApiApplication {
     @Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository, UserRepository userRepository){
         return args -> {
-            Stream.of("ADMIN","EDITOR","CUSTOMER","SHIPPER").forEach(role->{
+            Stream.of("ADMIN","EDITOR","CUSTOMER","SHIPPER","ASSISTANT").forEach(role->{
                 Role r = new Role();
                 r.setName(role);
                 r.setDescription(role);
