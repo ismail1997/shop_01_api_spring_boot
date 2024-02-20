@@ -8,14 +8,14 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    @Mapping(target = "category", ignore = true)
-    @Mapping(target = "brand", ignore = true)
+    //@Mapping(target = "category", ignore = true)
+    //@Mapping(target = "brand", ignore = true)
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "details", ignore = true)
     Product toEntity(ProductDTO productDTO);
 
-    @Mapping(target = "category", ignore = true)
-    @Mapping(target = "brand", ignore = true)
+    //@Mapping(target = "category", ignore = true)
+    //@Mapping(target = "brand", ignore = true)
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "details", ignore = true)
     ProductDTO toDto(Product product);

@@ -21,4 +21,6 @@ public interface UserService {
     String uploadUserPhoto(Long id, MultipartFile file) throws IOException, UserNotFoundException;
 
     void changeUserEnabledStatus(Long id, boolean enabled) ;
+
+    byte[] getImageOfUser(Long id) throws UserNotFoundException, IOException;
 }

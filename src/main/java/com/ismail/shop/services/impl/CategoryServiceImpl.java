@@ -7,11 +7,18 @@ import com.ismail.shop.exceptions.CategoryNotFoundException;
 import com.ismail.shop.mappers.CategoryMapper;
 import com.ismail.shop.repositories.CategoryRepository;
 import com.ismail.shop.services.CategoryService;
+import com.ismail.shop.utilities.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +70,17 @@ public class CategoryServiceImpl implements CategoryService {
         categoryPageDTO.setTotalPages(categoryPage.getTotalPages());
         categoryPageDTO.setCategoryDTOS(categoryDTOS);
         return categoryPageDTO;
+    }
+
+    @Override
+    public byte[] getImageOfCategory( Long id) throws IOException, CategoryNotFoundException {
+        CategoryDTO categoryDTO  = getOneCategoryByID(id);
+        String photoName = categoryDTO.getImage();
+
+        File file = new File(Constants.CATEGORIES_IMAGES +categoryDTO.getId()+"\\"+photoName);
+
+        Path path = Paths.get(file.toURI());
+        return Files.readAllBytes(path);
     }
 
 }

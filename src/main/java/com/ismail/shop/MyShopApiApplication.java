@@ -1,21 +1,13 @@
 package com.ismail.shop;
 
-import com.ismail.shop.entities.Brand;
-import com.ismail.shop.entities.Category;
-import com.ismail.shop.entities.Role;
-import com.ismail.shop.entities.User;
-import com.ismail.shop.repositories.BrandRepository;
-import com.ismail.shop.repositories.CategoryRepository;
-import com.ismail.shop.repositories.RoleRepository;
-import com.ismail.shop.repositories.UserRepository;
+import com.ismail.shop.entities.*;
+import com.ismail.shop.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 @SpringBootApplication
@@ -72,7 +64,8 @@ public class MyShopApiApplication {
 
 
     @Bean
-    public CommandLineRunner categoryCommandLineRunner(CategoryRepository categoryRepository){
+    public CommandLineRunner categoryCommandLineRunner(CategoryRepository categoryRepository,
+                                                       BrandRepository brandRepository,ProductRepository repository){
         return args -> {
             Stream.of("Computers",
                     "Smartphones",
@@ -96,13 +89,10 @@ public class MyShopApiApplication {
                 category.setImage(c+".png");
 
                 categoryRepository.save(category);
-            });
-        };
-    }
 
-    @Bean
-    public CommandLineRunner brandCommandLine(BrandRepository brandRepository){
-        return args -> {
+
+            });
+
             Stream.of(
                     "Apple", "Samsung", "Google", "Microsoft", "Sony",
                     "Nike", "Adidas", "Puma", "Dell", "Huawei",
@@ -116,7 +106,40 @@ public class MyShopApiApplication {
                         .build();
                 brandRepository.save(brand);
             });
+
+            Stream.of(
+                    "Samsung X23","Apple iPhone 13","Dell Inspiron 15","Sony WH-1000XM4","Fitbit Versa 3",
+                    "Canon EOS Rebel T7i","HP OfficeJet Pro 9025", "Logitech G Pro X","Razer DeathAdder Elite",
+                    "LG UltraGear 27GL850","Seagate Backup Plus Slim","Linksys AC2200","PlayStation 5",
+                    "Garmin Forerunner 245", "DJI Mavic Air 2","Anker PowerCore 10000","JBL Flip 5",
+                    "Apple AirPods Pro","Epson Home Cinema 2150", "Google Nest Hub"
+            ).forEach(productName->{
+                Product product = Product
+                        .builder()
+                        .name(productName)
+                        .alias(productName)
+
+                        .createdTime(new Date())
+                        .updatedTime(new Date())
+                        .cost(3.0f)
+                        .price(3.0f)
+                        .enabled(true)
+                        .inStock(true)
+                        .brand(brandRepository.findById(1l).get())
+                        .category(categoryRepository.findById(1l).get())
+                        .mainImage(productName+".png")
+                        .discountPercent(3.9f)
+                        .shortDescription("This is the short description of "+productName)
+                        .fullDescription("This is the full description of "+productName)
+                        .build();
+
+
+
+
+                repository.save(product);
+            });
         };
     }
+
 
 }

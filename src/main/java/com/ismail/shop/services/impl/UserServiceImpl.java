@@ -15,9 +15,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -112,4 +117,14 @@ public class UserServiceImpl implements UserService {
         this.userRepository.updateUserEnabledStatus(id,enabled);
     }
 
+    @Override
+    public byte[] getImageOfUser( Long id) throws UserNotFoundException, IOException {
+        UserDTO userDTO  =getOneUserByID(id);
+        String photoName = userDTO.getPhotos();
+
+        File file = new File(Constants.USERS_IMAGES +userDTO.getId()+"\\"+photoName);
+
+        Path path = Paths.get(file.toURI());
+        return Files.readAllBytes(path);
+    }
 }

@@ -10,11 +10,18 @@ import com.ismail.shop.exceptions.BrandNotFoundException;
 import com.ismail.shop.mappers.BrandMapper;
 import com.ismail.shop.repositories.BrandRepository;
 import com.ismail.shop.services.BrandService;
+import com.ismail.shop.utilities.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,5 +81,16 @@ public class BrandServiceImpl implements BrandService {
         brandPageDTO.setTotalPages(brandPage.getTotalPages());
         brandPageDTO.setBrandDTOS(brandDTOS);
         return brandPageDTO;
+    }
+
+    @Override
+    public byte[] getImageOfBrand(  Long id) throws BrandNotFoundException, IOException {
+        BrandDTO brandDTO  = getOneBrandByID(id);
+        String photoName = brandDTO.getLogo();
+
+        File file = new File(Constants.BRANDS_IMAGES +brandDTO.getId()+"\\"+photoName);
+
+        Path path = Paths.get(file.toURI());
+        return Files.readAllBytes(path);
     }
 }

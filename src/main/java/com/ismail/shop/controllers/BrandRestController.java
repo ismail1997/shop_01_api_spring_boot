@@ -58,13 +58,7 @@ public class BrandRestController {
 
     @GetMapping(value = "/{id}/image",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImageOfBrand(@PathVariable("id") Long id) throws BrandNotFoundException, IOException {
-        BrandDTO brandDTO  = this.brandService.getOneBrandByID(id);
-        String photoName = brandDTO.getLogo();
-
-        File file = new File(Constants.BRANDS_IMAGES +brandDTO.getId()+"\\"+photoName);
-
-        Path path = Paths.get(file.toURI());
-        return Files.readAllBytes(path);
+       return this.brandService.getImageOfBrand(id);
     }
 
 }
