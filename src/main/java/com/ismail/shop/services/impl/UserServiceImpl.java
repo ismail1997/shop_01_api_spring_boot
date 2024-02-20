@@ -8,6 +8,8 @@ import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.mappers.UserMapper;
 import com.ismail.shop.repositories.UserRepository;
 import com.ismail.shop.services.UserService;
+import com.ismail.shop.utilities.Constants;
+import com.ismail.shop.utilities.FileUploadUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,10 +88,28 @@ public class UserServiceImpl implements UserService {
         return user != null;
     }
 
-    public String uploadUserPhoto(Long id, MultipartFile file){
-        String fileName= StringUtils.cleanPath(file.getOriginalFilename());
+    @Override
+    public String uploadUserPhoto(Long id, MultipartFile file) throws IOException, UserNotFoundException {
+        UserDTO user = getOneUserByID(id);
+        if(!file.isEmpty()){
+           String fileName= StringUtils.cleanPath(file.getOriginalFilename());
+           String uploadDir = Constants.USERS_IMAGES+id;
 
-        return null;
+           user.setPhotos(fileName);
+           this.userRepository.save(this.userMapper.toEntity(user));
+
+           //first we clean the directory to avoid duplicate images
+           FileUploadUtil.cleanDir(uploadDir);
+           FileUploadUtil.saveFile(uploadDir,fileName,file);
+           return fileName;
+       }
+        return "image-not-uploaded";
+    }
+
+
+    @Override
+    public void changeUserEnabledStatus(Long id, boolean enabled)  {
+        this.userRepository.updateUserEnabledStatus(id,enabled);
     }
 
 }

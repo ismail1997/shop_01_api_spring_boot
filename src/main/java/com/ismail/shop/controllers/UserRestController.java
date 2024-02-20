@@ -6,8 +6,11 @@ import com.ismail.shop.dtos.UserPageDTO;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.UserService;
 import com.ismail.shop.utilities.Constants;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,5 +72,24 @@ public class UserRestController {
     public  boolean checkIfEmailAlreadyExisted(@PathVariable("email") String email){
         return this.userService.checkIfEmailAlreadyExisted(email);
     }
+
+    @PostMapping(value="/{id}/upload-image", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadImageOfUser(@PathVariable("id") Long id, @RequestParam("image") MultipartFile file) throws  UserNotFoundException {
+        try {
+            String imageUrl = userService.uploadUserPhoto(id, file);
+            return ResponseEntity.ok().body("{\"imageUrl\": \"" + imageUrl + "\"}");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"An error occurred while uploading the image.\"}");
+        }
+    }
+
+    @PutMapping("/{id}/change-enabled-status")
+    public ResponseEntity<?> updateEnabledUser(@PathVariable("id") Long id,@RequestParam(name = "enabled") Boolean enabled){
+        boolean isEnabled = enabled != null ? enabled : false;
+        this.userService.changeUserEnabledStatus(id,isEnabled);
+        return ResponseEntity.ok().body("{\"updated\": \"" + isEnabled + "\"}");
+    }
+
 
 }
