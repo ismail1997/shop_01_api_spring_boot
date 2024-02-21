@@ -31,4 +31,13 @@ public class Brand {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories ;
+
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", logo='" + logo + '\'' +
+                '}';
+    }
 }
