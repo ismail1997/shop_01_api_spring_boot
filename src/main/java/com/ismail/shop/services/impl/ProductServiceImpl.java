@@ -2,16 +2,21 @@ package com.ismail.shop.services.impl;
 
 import com.ismail.shop.dtos.ProductDTO;
 import com.ismail.shop.dtos.ProductPageDTO;
+import com.ismail.shop.dtos.UserDTO;
 import com.ismail.shop.entities.Product;
 import com.ismail.shop.exceptions.ProductNotFoundException;
+import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.mappers.*;
 import com.ismail.shop.repositories.ProductRepository;
 import com.ismail.shop.services.ProductService;
 import com.ismail.shop.utilities.Constants;
+import com.ismail.shop.utilities.FileUploadUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,5 +99,42 @@ public class ProductServiceImpl implements ProductService {
         File file = new File(Constants.PRODUCTS_IMAGES +productDTO.getId()+"\\"+photoName);
         Path path = Paths.get(file.toURI());
         return Files.readAllBytes(path);
+    }
+
+
+    @Override
+    public String uploadProductMainPhoto(Long id, MultipartFile file) throws IOException, ProductNotFoundException {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Could not find any product with id: " + id));
+        if(!file.isEmpty()){
+            String fileName= StringUtils.cleanPath(file.getOriginalFilename());
+            String uploadDir = Constants.PRODUCTS_IMAGES+id;
+
+            product.setMainImage(fileName);
+            this.productRepository.save(product);
+
+            //first we clean the directory to avoid duplicate images
+            FileUploadUtil.cleanDir(uploadDir);
+            FileUploadUtil.saveFile(uploadDir,fileName,file);
+            return fileName;
+        }
+        return "image-not-uploaded";
+    }
+
+
+    @Override
+    public String uploadProductExtrasPhotos(Long id, MultipartFile[] files ) throws ProductNotFoundException, IOException {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Could not find any product with id: " + id));
+
+        if(files.length>0){
+            String uploadDir = Constants.PRODUCTS_IMAGES+id+"/extras";
+            for(MultipartFile multipartFile : files)
+            {
+                if(multipartFile.isEmpty()) continue;
+                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+                FileUploadUtil.saveFile(uploadDir,fileName,multipartFile);
+            }
+            return "uploaded";
+        }
+        return "not-uploaded";
     }
 }

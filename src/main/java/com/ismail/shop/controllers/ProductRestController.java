@@ -7,9 +7,11 @@ import com.ismail.shop.exceptions.ProductNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.ProductService;
 import com.ismail.shop.utilities.Constants;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +59,30 @@ public class ProductRestController {
     public byte[] getImageOfProduct(@PathVariable("id") Long id) throws ProductNotFoundException, IOException {
         return this.service.getImageOfProductByID(id);
     }
+
+
+    @PostMapping(value="/{id}/upload-main-image", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadMainImageOfProduct(@PathVariable("id") Long id, @RequestParam("image") MultipartFile file)    {
+        try {
+            String imageUrl = service.uploadProductMainPhoto(id, file);
+            return ResponseEntity.ok().body("{\"imageUrl\": \"" + imageUrl + "\"}");
+        } catch (IOException | ProductNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"An error occurred while uploading the image.\"}");
+        }
+    }
+
+    @PostMapping(value = "/{id}/upload-extras-images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadProductExtrasImages(@PathVariable("id") Long id,  @RequestPart("file") MultipartFile[] files) {
+        try {
+            String status = service.uploadProductExtrasPhotos(id, files);
+            return ResponseEntity.ok().body("{\"imageUrl\": \"" + status + "\"}");
+        } catch (IOException | ProductNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"An error occurred while uploading the image.\"}");
+        }
+    }
+
 
 
 }
