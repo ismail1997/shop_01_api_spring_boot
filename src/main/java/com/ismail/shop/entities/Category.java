@@ -39,4 +39,15 @@ public class Category {
     @OrderBy("name asc")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Category> children ;
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", alias='" + alias + '\'' +
+                ", image='" + image + '\'' +
+                ", enabled=" + enabled +
+                '}';
+    }
 }

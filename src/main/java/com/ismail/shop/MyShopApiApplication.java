@@ -17,7 +17,7 @@ public class MyShopApiApplication {
         SpringApplication.run(MyShopApiApplication.class, args);
     }
 
-    //@Bean
+    @Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository, UserRepository userRepository){
         return args -> {
             Stream.of("ADMIN","EDITOR","CUSTOMER","SHIPPER","ASSISTANT").forEach(role->{
@@ -93,19 +93,31 @@ public class MyShopApiApplication {
 
             });
 
+
+            List<Category> categories = categoryRepository.findAll();
+
             Stream.of(
                     "Apple", "Samsung", "Google", "Microsoft", "Sony",
                     "Nike", "Adidas", "Puma", "Dell", "Huawei",
                     "Xiaomi", "Intel", "Canon", "ASUS", "AMD",
                     "Toyota", "Honda", "Ford", "BMW", "Mercedes-Benz"
             ).forEach(brandName->{
+
+                List<Category> cats = new ArrayList<>();
+                for(int i= 0 ; i<3 ;i++) cats.add(categories.get(new Random().nextInt(categories.size())));
+
                 Brand brand  = Brand
                         .builder()
                         .name(brandName)
                         .logo(brandName.toLowerCase()+".png")
+                        .categories(cats)
                         .build();
                 brandRepository.save(brand);
             });
+
+
+
+
 
             Stream.of(
                     "Samsung X23","Apple iPhone 13","Dell Inspiron 15","Sony WH-1000XM4","Fitbit Versa 3",

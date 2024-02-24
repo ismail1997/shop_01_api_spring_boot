@@ -2,6 +2,7 @@ package com.ismail.shop.services;
 
 import com.ismail.shop.dtos.BrandDTO;
 import com.ismail.shop.dtos.BrandPageDTO;
+import com.ismail.shop.dtos.CategoryDTO;
 import com.ismail.shop.exceptions.BrandNotFoundException;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ public interface BrandService {
     BrandDTO getOneBrandByID(Long id) throws BrandNotFoundException;
     BrandDTO createBrand(BrandDTO brandDTO);
     void deleteBrandByID(Long id) throws BrandNotFoundException;
+
+    List<CategoryDTO> getCategoriesOfBrand(Long id) throws BrandNotFoundException;
 
     BrandPageDTO getPageOfBrands(int page, int size);
 

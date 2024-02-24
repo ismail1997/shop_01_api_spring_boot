@@ -1,9 +1,6 @@
 package com.ismail.shop.controllers;
 
-import com.ismail.shop.dtos.BrandDTO;
-import com.ismail.shop.dtos.BrandPageDTO;
-import com.ismail.shop.dtos.UserDTO;
-import com.ismail.shop.dtos.UserPageDTO;
+import com.ismail.shop.dtos.*;
 import com.ismail.shop.entities.Brand;
 import com.ismail.shop.exceptions.BrandNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
@@ -56,9 +53,16 @@ public class BrandRestController {
         return  this.brandService.getPageOfBrands(page,size);
     }
 
+    @GetMapping("/{id}/categories")
+    public List<CategoryDTO> getCategoriesOfBrand(@PathVariable("id") Long id) throws BrandNotFoundException {
+        return this.brandService.getCategoriesOfBrand(id);
+    }
+
     @GetMapping(value = "/{id}/image",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImageOfBrand(@PathVariable("id") Long id) throws BrandNotFoundException, IOException {
        return this.brandService.getImageOfBrand(id);
     }
+
+
 
 }

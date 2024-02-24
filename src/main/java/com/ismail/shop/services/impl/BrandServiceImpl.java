@@ -3,11 +3,10 @@ package com.ismail.shop.services.impl;
 import com.ismail.shop.dtos.BrandDTO;
 import com.ismail.shop.dtos.BrandPageDTO;
 import com.ismail.shop.dtos.CategoryDTO;
-import com.ismail.shop.dtos.CategoryPageDTO;
 import com.ismail.shop.entities.Brand;
-import com.ismail.shop.entities.Category;
 import com.ismail.shop.exceptions.BrandNotFoundException;
 import com.ismail.shop.mappers.BrandMapper;
+import com.ismail.shop.mappers.CategoryMapper;
 import com.ismail.shop.repositories.BrandRepository;
 import com.ismail.shop.services.BrandService;
 import com.ismail.shop.utilities.Constants;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +29,12 @@ public class BrandServiceImpl implements BrandService {
 
     private BrandRepository brandRepository;
     private BrandMapper mapper;
+    private CategoryMapper categoryMapper;
 
-    public BrandServiceImpl(BrandRepository brandRepository, BrandMapper mapper) {
+    public BrandServiceImpl(BrandRepository brandRepository, BrandMapper mapper, CategoryMapper categoryMapper) {
         this.brandRepository = brandRepository;
         this.mapper = mapper;
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
@@ -64,6 +64,15 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = this.brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException("Could not find any brand with id " + id));
         this.brandRepository.deleteById(brand.getId());
     }
+
+
+    @Override
+    public List<CategoryDTO> getCategoriesOfBrand(Long id) throws BrandNotFoundException {
+        Brand brand = this.brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException("Could not find any brand with id " + id));
+        List<CategoryDTO> categoryDTOS = brand.getCategories().stream().map(category -> categoryMapper.fromEntity(category)).collect(Collectors.toList());
+        return categoryDTOS;
+    }
+
 
     @Override
     public BrandPageDTO getPageOfBrands(int page, int size)
