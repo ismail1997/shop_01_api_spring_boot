@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface BrandMapper {
 
-    @Mapping(target = "categories", ignore = true)
+    //@Mapping(target = "categories", ignore = true)
     Brand fromDTO(BrandDTO brandDTO);
 
-    @Mapping(target = "categories", ignore = true)
+    //@Mapping(target = "categories", ignore = true)
     BrandDTO fromEntity(Brand brand);
 }

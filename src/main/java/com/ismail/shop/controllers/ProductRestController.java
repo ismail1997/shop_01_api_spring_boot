@@ -73,7 +73,7 @@ public class ProductRestController {
     }
 
     @PostMapping(value = "/{id}/upload-extras-images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadProductExtrasImages(@PathVariable("id") Long id,  @RequestPart("file") MultipartFile[] files) {
+    public ResponseEntity<?> uploadProductExtrasImages(@PathVariable("id") Long id,  @RequestPart("files") MultipartFile[] files) {
         try {
             String status = service.uploadProductExtrasPhotos(id, files);
             return ResponseEntity.ok().body("{\"imageUrl\": \"" + status + "\"}");

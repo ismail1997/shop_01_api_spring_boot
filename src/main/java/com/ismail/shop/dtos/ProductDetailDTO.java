@@ -21,5 +21,5 @@ public class ProductDetailDTO {
 
     private String value;
 
-    private ProductDTO product;
+    //private ProductDTO product;
 }

@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIncludeProperties({"name","id","alias","image","enabled"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonIncludeProperties({"name","id","alias","image","enabled"})
 public class CategoryDTO {
 
     private Long id;
@@ -30,8 +30,8 @@ public class CategoryDTO {
 
     private boolean enabled;
 
-    private CategoryDTO parent;
+    //private CategoryDTO parent;
 
 
-    private List<CategoryDTO> children;
+    //private List<CategoryDTO> children;
 }

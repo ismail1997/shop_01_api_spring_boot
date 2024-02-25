@@ -9,9 +9,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProductImageMapper {
 
-    @Mapping(target = "product", ignore = true)
+    //@Mapping(target = "product", ignore = true)
     ProductImage toEntity(ProductImagedDTO productImagedDTO);
 
-    @Mapping(target = "product", ignore = true)
+    //@Mapping(target = "product", ignore = true)
     ProductImagedDTO toDto(ProductImage productImage);
 }

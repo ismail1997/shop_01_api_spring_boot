@@ -20,5 +20,5 @@ public class ProductImagedDTO {
 
 
 
-    private ProductDTO product;
+    //private ProductDTO product;
 }

@@ -10,9 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProductDetailMapper {
 
-    @Mapping(target = "product", ignore = true)
+    //@Mapping(target = "product", ignore = true)
     ProductDetail toEntity(ProductDetailDTO productDetailDTO);
 
-    @Mapping(target = "product", ignore = true)
+    //@Mapping(target = "product", ignore = true)
     ProductDetailDTO toDto(ProductDetail productDetail);
 }

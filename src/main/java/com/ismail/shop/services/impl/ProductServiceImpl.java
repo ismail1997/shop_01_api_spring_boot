@@ -1,10 +1,12 @@
 package com.ismail.shop.services.impl;
 
 import com.ismail.shop.dtos.ProductDTO;
+import com.ismail.shop.dtos.ProductImagedDTO;
 import com.ismail.shop.dtos.ProductPageDTO;
 import com.ismail.shop.dtos.UserDTO;
 import com.ismail.shop.entities.Product;
 import com.ismail.shop.entities.ProductDetail;
+import com.ismail.shop.entities.ProductImage;
 import com.ismail.shop.exceptions.ProductNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.mappers.*;
@@ -65,14 +67,27 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = this.productMapper.toEntity(productDTO);
 
-        List<ProductDetail> productDetails = productDTO.getDetails().stream()
-                .map(productDetailDTO -> {
-                    ProductDetail productDetail = this.productDetailMapper.toEntity(productDetailDTO);
-                    productDetail.setProduct(product); // Set the product for the detail
-                    return productDetail;
-                })
-                .collect(Collectors.toList());
-        product.setDetails(productDetails);
+        if(productDTO.getDetails().size()>0){
+            List<ProductDetail> productDetails = productDTO.getDetails().stream()
+                    .map(productDetailDTO -> {
+                        ProductDetail productDetail = this.productDetailMapper.toEntity(productDetailDTO);
+                        productDetail.setProduct(product); // Set the product for the detail
+                        return productDetail;
+                    })
+                    .collect(Collectors.toList());
+            product.setDetails(productDetails);
+        }
+
+        if(productDTO.getImages().size()>0){
+            List<ProductImage> productImages = productDTO.getImages().stream()
+                    .map(productImagedDTO -> {
+                        ProductImage productImage = this.productImageMapper.toEntity(productImagedDTO);
+                        productImage.setProduct(product);
+                        return productImage;
+                    }).collect(Collectors.toList());
+            product.setImages(productImages);
+        }
+
 
         Product savedProduct = this.productRepository.save(product);
         return this.productMapper.toDto(savedProduct);
