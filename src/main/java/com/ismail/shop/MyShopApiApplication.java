@@ -150,6 +150,26 @@ public class MyShopApiApplication {
 
                 repository.save(product);
             });
+
+            repository.findAll().forEach(product -> {
+                ProductDetail productDetail = new ProductDetail();
+                productDetail.setName("Detail 1 "+product.getName());
+                productDetail.setValue("Value 1 "+product.getAlias());
+                productDetail.setProduct(product);
+
+                ProductDetail productDetail1 = ProductDetail.builder()
+                        .product(product)
+                        .name("Detail 2 "+product.getName())
+                        .value("Value 2 "+product.getAlias())
+                        .build();
+
+                List<ProductDetail> details = new ArrayList<>();
+                details.add(productDetail);details.add(productDetail1);
+
+                product.setDetails(details);
+                repository.save(product);
+
+            });
         };
     }
 

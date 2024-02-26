@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,6 +89,8 @@ public class ProductServiceImpl implements ProductService {
             product.setImages(productImages);
         }
 
+        product.setCreatedTime(new Date());
+        product.setUpdatedTime(new Date());
 
         Product savedProduct = this.productRepository.save(product);
         return this.productMapper.toDto(savedProduct);

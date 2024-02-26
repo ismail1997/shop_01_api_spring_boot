@@ -84,4 +84,8 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id, name, alias, shortDescription, fullDescription, createdTime, updatedTime, enabled, inStock, cost, price, discountPercent, length, width, height, weight, mainImage, category, brand, images, details);
     }
+
+    public void addDetail(ProductDetail detail){
+        this.details.add(detail);
+    }
 }
