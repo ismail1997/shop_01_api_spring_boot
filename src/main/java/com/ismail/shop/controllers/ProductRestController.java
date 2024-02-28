@@ -1,8 +1,11 @@
 package com.ismail.shop.controllers;
 
 import com.ismail.shop.dtos.ProductDTO;
+import com.ismail.shop.dtos.ProductImagedDTO;
 import com.ismail.shop.dtos.ProductPageDTO;
 import com.ismail.shop.dtos.UserDTO;
+import com.ismail.shop.entities.ProductImage;
+import com.ismail.shop.exceptions.ProductImageNotFoundException;
 import com.ismail.shop.exceptions.ProductNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.services.ProductService;
@@ -80,6 +83,22 @@ public class ProductRestController {
         } catch (IOException | ProductNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"An error occurred while uploading the image.\"}");
+        }
+    }
+
+    @GetMapping("/{id}/extras-images")
+    public ResponseEntity<List<ProductImagedDTO>> getExtrasImagesOfProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+        return ResponseEntity.ok().body(this.service.getExtrasImagesOfProduct(id));
+    }
+
+
+    @GetMapping(value="/{id}/extras-images/{idImage}",produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getExtraImageOfProductByID(@PathVariable("id") Long idProduct,@PathVariable("idImage") Long idProductImage){
+        try{
+            return ResponseEntity.ok().body(this.service.getExtraImageOfProduct(idProduct,idProductImage));
+        }catch(ProductImageNotFoundException | ProductNotFoundException | IOException exception){
+           exception.printStackTrace();
+           return null; //todo return default image if there is any error
         }
     }
 

@@ -7,6 +7,7 @@ import com.ismail.shop.dtos.UserDTO;
 import com.ismail.shop.entities.Product;
 import com.ismail.shop.entities.ProductDetail;
 import com.ismail.shop.entities.ProductImage;
+import com.ismail.shop.exceptions.ProductImageNotFoundException;
 import com.ismail.shop.exceptions.ProductNotFoundException;
 import com.ismail.shop.exceptions.UserNotFoundException;
 import com.ismail.shop.mappers.*;
@@ -129,6 +130,19 @@ public class ProductServiceImpl implements ProductService {
         return Files.readAllBytes(path);
     }
 
+    @Override
+    public byte[] getExtraImageOfProduct(Long idProduct, Long idProductImage) throws ProductImageNotFoundException, ProductNotFoundException, IOException {
+        Product product = this.productRepository.findById(idProduct).orElseThrow(() -> new ProductNotFoundException("Could not find any product with id: " + idProduct));
+
+        List<ProductImage> productImages = product.getImages();
+        ProductImage image = productImages.stream().filter(productImage -> productImage.getId().equals(idProductImage)).findFirst().orElseThrow(()->new ProductImageNotFoundException("Could not find any image for this product with this id "+idProductImage));
+
+        String imageName = image.getName();
+        File file = new File(Constants.PRODUCTS_IMAGES+product.getId()+"\\extras\\"+imageName);
+        Path path = Paths.get(file.toURI());
+
+        return Files.readAllBytes(path);
+    }
 
     @Override
     public String uploadProductMainPhoto(Long id, MultipartFile file) throws IOException, ProductNotFoundException {
@@ -164,5 +178,12 @@ public class ProductServiceImpl implements ProductService {
             return "uploaded";
         }
         return "not-uploaded";
+    }
+
+    @Override
+    public List<ProductImagedDTO> getExtrasImagesOfProduct(Long id) throws ProductNotFoundException {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Could not find any product with id: " + id));
+        List<ProductImagedDTO> productImagedDTOS = product.getImages().stream().map(productImage -> this.productImageMapper.toDto(productImage)).collect(Collectors.toList());
+        return productImagedDTOS;
     }
 }

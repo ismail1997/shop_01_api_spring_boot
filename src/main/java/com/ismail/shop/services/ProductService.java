@@ -1,7 +1,10 @@
 package com.ismail.shop.services;
 
 import com.ismail.shop.dtos.ProductDTO;
+import com.ismail.shop.dtos.ProductImagedDTO;
 import com.ismail.shop.dtos.ProductPageDTO;
+import com.ismail.shop.entities.ProductImage;
+import com.ismail.shop.exceptions.ProductImageNotFoundException;
 import com.ismail.shop.exceptions.ProductNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +21,11 @@ public interface ProductService {
 
     byte[] getImageOfProductByID(Long id) throws ProductNotFoundException, IOException;
 
+    byte[] getExtraImageOfProduct(Long idProduct, Long idProductImages) throws ProductImageNotFoundException, ProductNotFoundException, IOException;
+
     String uploadProductMainPhoto(Long id, MultipartFile file) throws IOException, ProductNotFoundException;
 
     String uploadProductExtrasPhotos(Long id, MultipartFile[] files) throws ProductNotFoundException, IOException;
+
+    List<ProductImagedDTO> getExtrasImagesOfProduct(Long id) throws ProductNotFoundException;
 }
