@@ -12,6 +12,9 @@ public interface UserService {
     List<UserDTO> getAllUsers();
     UserDTO getOneUserByID(Long id) throws UserNotFoundException;
     UserDTO createUser(UserDTO userDTO);
+
+    UserDTO updateUser(Long id, UserDTO userDTO) throws UserNotFoundException;
+
     void deleteUserByID(Long id) throws UserNotFoundException;
 
     UserPageDTO getPageOfUsers(int page, int size);

@@ -45,6 +45,13 @@ public class UserRestController {
         return this.userService.createUser(userDTO);
     }
 
+
+    @PutMapping("/{id}")
+    public UserDTO updateUser(@PathVariable("id") Long id,@RequestBody UserDTO userDTO) throws UserNotFoundException {
+        return this.userService.updateUser(id,userDTO);
+    }
+
+
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") Long id) throws UserNotFoundException {
         this.userService.deleteUserByID(id);

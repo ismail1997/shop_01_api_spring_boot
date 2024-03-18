@@ -1,6 +1,7 @@
 package com.ismail.shop.services;
 
 import com.ismail.shop.dtos.ProductDTO;
+import com.ismail.shop.dtos.ProductDetailDTO;
 import com.ismail.shop.dtos.ProductImagedDTO;
 import com.ismail.shop.dtos.ProductPageDTO;
 import com.ismail.shop.entities.ProductImage;
@@ -28,4 +29,6 @@ public interface ProductService {
     String uploadProductExtrasPhotos(Long id, MultipartFile[] files) throws ProductNotFoundException, IOException;
 
     List<ProductImagedDTO> getExtrasImagesOfProduct(Long id) throws ProductNotFoundException;
+
+    List<ProductDetailDTO> getProductDetails(Long id) throws ProductNotFoundException;
 }

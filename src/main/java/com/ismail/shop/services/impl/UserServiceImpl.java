@@ -3,8 +3,10 @@ package com.ismail.shop.services.impl;
 
 import com.ismail.shop.dtos.UserDTO;
 import com.ismail.shop.dtos.UserPageDTO;
+import com.ismail.shop.entities.Role;
 import com.ismail.shop.entities.User;
 import com.ismail.shop.exceptions.UserNotFoundException;
+import com.ismail.shop.mappers.RoleMapper;
 import com.ismail.shop.mappers.UserMapper;
 import com.ismail.shop.repositories.UserRepository;
 import com.ismail.shop.services.UserService;
@@ -15,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -32,9 +33,12 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    private RoleMapper roleMapper;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleMapper roleMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.roleMapper = roleMapper;
     }
 
     @Override
@@ -58,6 +62,38 @@ public class UserServiceImpl implements UserService {
         User user = this.userMapper.toEntity(userDTO);
         User savedUser = this.userRepository.save(user);
         return this.userMapper.toDTO(savedUser);
+    }
+
+    @Override
+    public UserDTO updateUser(Long id, UserDTO userDTO) throws UserNotFoundException {
+        User user = this.userRepository.findById(id).orElseThrow(()->new UserNotFoundException(String.format("Can not find user with this id %d ",id)));
+
+        if(userDTO.getPhotos()!=null && !userDTO.getPhotos().isEmpty()) user.setPhotos(userDTO.getPhotos());
+
+        if(userDTO.getAddress()!=null && !userDTO.getAddress().isEmpty()) user.setAddress(userDTO.getAddress());
+
+        if(userDTO.getCity()!=null && !userDTO.getCity().isEmpty()) user.setCity(userDTO.getCity());
+
+        if(userDTO.getCountry()!=null && !userDTO.getCountry().isEmpty()) user.setCountry(userDTO.getCountry());
+
+        if(userDTO.getFirstName()!=null && !userDTO.getFirstName().isEmpty()) user.setFirstName(userDTO.getFirstName());
+
+        if(userDTO.getLastName()!=null && !userDTO.getLastName().isEmpty()) user.setLastName(userDTO.getLastName());
+
+        if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty()) user.setPassword(userDTO.getPassword());
+
+        if(userDTO.getPostalCode()!=null && !userDTO.getPostalCode().isEmpty()) user.setPostalCode(userDTO.getPostalCode());
+
+        if(userDTO.getRoles()!=null && !userDTO.getRoles().isEmpty()) {
+            List<Role> roles = userDTO.getRoles().stream()
+                    .map(roleDTO -> this.roleMapper.toEntity(roleDTO))
+                    .collect(Collectors.toList());
+            user.setRoles(roles);
+        }
+
+        User updatedUser = this.userRepository.save(user);
+
+        return this.userMapper.toDTO(updatedUser);
     }
 
     @Override

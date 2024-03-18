@@ -1,9 +1,6 @@
 package com.ismail.shop.services.impl;
 
-import com.ismail.shop.dtos.ProductDTO;
-import com.ismail.shop.dtos.ProductImagedDTO;
-import com.ismail.shop.dtos.ProductPageDTO;
-import com.ismail.shop.dtos.UserDTO;
+import com.ismail.shop.dtos.*;
 import com.ismail.shop.entities.Product;
 import com.ismail.shop.entities.ProductDetail;
 import com.ismail.shop.entities.ProductImage;
@@ -185,5 +182,12 @@ public class ProductServiceImpl implements ProductService {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Could not find any product with id: " + id));
         List<ProductImagedDTO> productImagedDTOS = product.getImages().stream().map(productImage -> this.productImageMapper.toDto(productImage)).collect(Collectors.toList());
         return productImagedDTOS;
+    }
+
+    @Override
+    public List<ProductDetailDTO> getProductDetails(Long id) throws ProductNotFoundException {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Could not find any product with id: " + id));
+        List<ProductDetailDTO> productDetailDTOS = product.getDetails().stream().map(productDetail -> this.productDetailMapper.toDto(productDetail)).collect(Collectors.toList());
+        return productDetailDTOS;
     }
 }

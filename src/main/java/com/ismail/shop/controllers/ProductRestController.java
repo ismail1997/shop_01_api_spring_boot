@@ -1,26 +1,20 @@
 package com.ismail.shop.controllers;
 
-import com.ismail.shop.dtos.ProductDTO;
-import com.ismail.shop.dtos.ProductImagedDTO;
-import com.ismail.shop.dtos.ProductPageDTO;
-import com.ismail.shop.dtos.UserDTO;
-import com.ismail.shop.entities.ProductImage;
+import com.ismail.shop.dtos.*;
+
 import com.ismail.shop.exceptions.ProductImageNotFoundException;
 import com.ismail.shop.exceptions.ProductNotFoundException;
-import com.ismail.shop.exceptions.UserNotFoundException;
+
 import com.ismail.shop.services.ProductService;
-import com.ismail.shop.utilities.Constants;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -100,6 +94,11 @@ public class ProductRestController {
            exception.printStackTrace();
            return null; //todo return default image if there is any error
         }
+    }
+
+    @GetMapping("/{id}/details")
+    public List<ProductDetailDTO> getDetailsOfProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+        return this.service.getProductDetails(id);
     }
 
 
