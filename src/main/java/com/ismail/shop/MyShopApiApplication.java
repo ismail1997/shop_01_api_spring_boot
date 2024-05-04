@@ -17,7 +17,7 @@ public class MyShopApiApplication {
         SpringApplication.run(MyShopApiApplication.class, args);
     }
 
-    @Bean
+    //@Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository, UserRepository userRepository){
         return args -> {
             Stream.of("ADMIN","EDITOR","CUSTOMER","SHIPPER","ASSISTANT").forEach(role->{
@@ -63,7 +63,7 @@ public class MyShopApiApplication {
     }
 
 
-    @Bean
+    //@Bean
     public CommandLineRunner categoryCommandLineRunner(CategoryRepository categoryRepository,
                                                        BrandRepository brandRepository,ProductRepository repository){
         return args -> {

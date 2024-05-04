@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +90,8 @@ public class UserServiceImpl implements UserService {
                     .map(roleDTO -> this.roleMapper.toEntity(roleDTO))
                     .collect(Collectors.toList());
             user.setRoles(roles);
+        }else{
+            user.setRoles(new ArrayList<>());
         }
 
         User updatedUser = this.userRepository.save(user);
