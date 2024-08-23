@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @Rollback(value = true)
 public class CategoryRepositoryTest {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public CategoryRepositoryTest(CategoryRepository categoryRepository) {

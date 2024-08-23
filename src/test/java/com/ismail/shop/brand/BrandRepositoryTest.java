@@ -10,21 +10,22 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @DataJpaTest(showSql = false)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Rollback(value = false)
+@Rollback(value = true)
 public class BrandRepositoryTest {
 
+    private final BrandRepository brandRepository;
+
     @Autowired
-    private BrandRepository brandRepository;
+    public BrandRepositoryTest(BrandRepository brandRepository){
+        this.brandRepository=brandRepository;
+    }
 
     @Test
     public void testGetAllBrands(){
@@ -36,10 +37,10 @@ public class BrandRepositoryTest {
     @Test
     public void tesFindBrandByID()
     {
-        long id = 20l;
+        long id = 10l;
         Brand brand = brandRepository.findById(id).get();
         assertThat(brand).isNotNull();
-        assertThat(brand.getName()).isEqualTo("Mercedes-Benz");
+        assertThat(brand.getName()).isEqualTo("Huawei");
     }
 
     @Test
@@ -54,7 +55,14 @@ public class BrandRepositoryTest {
     @Test
     public void testCreateBrand()
     {
-        Brand brand = Brand.builder().name("My Brand Created").logo("The Brand that just created").build();
+        int randomSuffix = new Random().nextInt(50);
+        String brandName = "BrandForTest"+randomSuffix;
+
+        Brand brand = Brand.builder()
+                .name(brandName)
+                .logo("The Brand that just created")
+                .build();
+
         Brand savedBrand = brandRepository.save(brand);
 
         assertThat(savedBrand).isNotNull();
@@ -66,11 +74,18 @@ public class BrandRepositoryTest {
         Category category = new Category();
         category.setId(1l);
 
-        Brand brand = new Brand();
-        brand.setName("main");
-        brand.setLogo("name");
+        int randomSuffix = new Random().nextInt(40);
+        String brandName = "BrandWithCategoryForTest"+randomSuffix;
+
+        Brand brand = Brand
+                .builder()
+                .name(brandName)
+                .logo(brandName+"logo")
+                .build();
+
         List<Category> categories = new ArrayList<>();
         categories.add(category);
+
         brand.setCategories(categories);
 
         Brand savedBrand = brandRepository.save(brand);
@@ -91,10 +106,25 @@ public class BrandRepositoryTest {
 
     @Test
     public void testDelete(){
-        long id= 20l;
-        brandRepository.deleteById(id);
 
-        Optional<Brand> result = brandRepository.findById(id);
+        // Step 1: Create a new category to ensure there's something to delete
+        Brand brand= Brand
+                .builder()
+                .name("BrandToDelete")
+                .logo("BrandLogoToDelete")
+                .build();
+
+        Brand savedBrand = brandRepository.save(brand);
+        long idToDelete = savedBrand.getId();
+
+        // Step 2: Ensure the brand exists before deletion
+        Optional<Brand> brandToDeleteOptional = brandRepository.findById(idToDelete);
+        assertThat(brandToDeleteOptional).isPresent();//to verify it exists
+
+
+        brandRepository.deleteById(idToDelete);
+
+        Optional<Brand> result = brandRepository.findById(idToDelete);
         assertThat(result).isEmpty();
     }
 
