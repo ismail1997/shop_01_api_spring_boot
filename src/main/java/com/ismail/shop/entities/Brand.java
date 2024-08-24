@@ -40,4 +40,9 @@ public class Brand {
                 ", logo='" + logo + '\'' +
                 '}';
     }
+
+    public Brand(long id)
+    {
+        this.id=id;
+    }
 }

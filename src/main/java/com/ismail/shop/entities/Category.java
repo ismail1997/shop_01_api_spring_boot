@@ -50,4 +50,9 @@ public class Category {
                 ", enabled=" + enabled +
                 '}';
     }
+
+    public Category(long id)
+    {
+        this.id=id;
+    }
 }

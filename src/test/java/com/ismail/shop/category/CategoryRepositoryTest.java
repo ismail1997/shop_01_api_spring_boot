@@ -1,6 +1,5 @@
 package com.ismail.shop.category;
 
-
 import com.ismail.shop.entities.Category;
 import com.ismail.shop.repositories.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -22,46 +21,40 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @Rollback(value = true)
 public class CategoryRepositoryTest {
 
-    private final CategoryRepository categoryRepository;
-
     @Autowired
-    public CategoryRepositoryTest(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    private CategoryRepository categoryRepository;
+
+    @Test
+    public void testGetAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        assertThat(categories).isNotEmpty(); // Check if the list is not empty
     }
 
     @Test
-    public void testGetAllCategories(){
-        List<Category> categories = this.categoryRepository.findAll();
-        assertThat(categories).size().isGreaterThan(0);
-        categories.forEach(System.out::println);
+    public void testGetCategoryById() {
+        // Assumes category with ID 1 exists in the test database
+        Optional<Category> optionalCategory = categoryRepository.findById(1L);
+        assertThat(optionalCategory).isPresent();
+        assertThat(optionalCategory.get().getName()).isEqualTo("Electronics");
     }
 
     @Test
-    public void testGetCategoryByID(){
-        Optional<Category> optionalCategory = this.categoryRepository.findById(7l);
-        assertThat(optionalCategory.isPresent());
-        assertThat(optionalCategory.get().getName()).isEqualTo("Accessories");
-    }
-
-    @Test
-    public void testThrowException(){
-        long id = 35l;
+    public void testThrowExceptionWhenCategoryNotFound() {
+        long nonExistentId = 999L; // Use an ID that does not exist
         assertThatExceptionOfType(NoSuchElementException.class)
-                .isThrownBy(()->{
-                    Category category = categoryRepository.findById(id).get();
-                });
+                .isThrownBy(() -> categoryRepository.findById(nonExistentId).orElseThrow());
     }
 
     @Test
-    public void testCreateCategory(){
+    public void testCreateCategory() {
         // Generate a random number for unique category name and alias
         int randomSuffix = new Random().nextInt(200);
-        String categoryName = "spring" + randomSuffix;
+        String categoryName = "Spring" + randomSuffix;
 
         // Build the new Category object
         Category category = Category.builder()
                 .name(categoryName)
-                .alias(categoryName)
+                .alias(categoryName.toLowerCase())
                 .image("spring.png")
                 .enabled(true)
                 .build();
@@ -79,27 +72,32 @@ public class CategoryRepositoryTest {
         // Verify that the saved category is not null and has the expected name
         assertThat(savedCategory).isNotNull();
         assertThat(savedCategory.getName()).isEqualTo(categoryName);
+        assertThat(savedCategory.getAlias()).isEqualTo(categoryName.toLowerCase());
     }
 
     @Test
-    public void testUpdateCategory(){
-        Category category = categoryRepository.findById(2l).get();
-        category.setName("updated");
-        category.setAlias("updated");
-        Category saved = categoryRepository.save(category);
+    public void testUpdateCategory() {
+        // Assumes category with ID 2 exists in the test database
+        Category category = categoryRepository.findById(2L)
+                .orElseThrow(() -> new NoSuchElementException("Category not found"));
 
-        assertThat(saved.getName()).isEqualTo("updated");
-        assertThat(saved.getAlias()).isEqualTo("updated");
+        category.setName("Updated Category");
+        category.setAlias("updated-category");
+        Category updatedCategory = categoryRepository.save(category);
+
+        assertThat(updatedCategory.getName()).isEqualTo("Updated Category");
+        assertThat(updatedCategory.getAlias()).isEqualTo("updated-category");
     }
 
     @Test
-    public void testDelete() {
+    public void testDeleteCategory() {
         // Step 1: Create a new category to ensure there's something to delete
-        Category category = new Category();
-        category.setName("TestDeleteCategory");
-        category.setAlias("TestDeleteAlias");
-        category.setImage("test.png");
-        category.setEnabled(true);
+        Category category = Category.builder()
+                .name("TestDeleteCategory")
+                .alias("test-delete-category")
+                .image("delete.png")
+                .enabled(true)
+                .build();
 
         Category savedCategory = categoryRepository.save(category);
         Long idToDelete = savedCategory.getId();
