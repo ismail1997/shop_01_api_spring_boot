@@ -107,10 +107,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserPageDTO getPageOfUsers(int page , int size){
-        if(page< 0) page = 0;
+        if(page<= 0) page = 1;
         if(size<0) size = 10;
 
-        Page<User> userPage = this.userRepository.findAll(PageRequest.of(page, size));
+        Page<User> userPage = this.userRepository.findAll(PageRequest.of(page-1, size));
 
         List<UserDTO> userDTOS = userPage.getContent().stream().map(user -> {
             return this.userMapper.toDTO(user);

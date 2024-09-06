@@ -77,9 +77,9 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public BrandPageDTO getPageOfBrands(int page, int size)
     {
-        if(page< 0) page = 0;
+        if(page<= 0) page = 1;
         if(size<0) size = 10;
-        Page<Brand> brandPage = this.brandRepository.findAll(PageRequest.of(page,size));
+        Page<Brand> brandPage = this.brandRepository.findAll(PageRequest.of(page-1,size));
 
         List<BrandDTO> brandDTOS = brandPage.getContent()
                 .stream().map(category -> this.mapper.fromEntity(category)).collect(Collectors.toList());

@@ -101,10 +101,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductPageDTO getPageOfProducts(int page, int size) {
-        if(page< 0) page = 0;
+        if(page<= 0) page = 1;
         if(size<0) size = 10;
 
-        Page<Product> productPage = this.productRepository.findAll(PageRequest.of(page,size));
+        Page<Product> productPage = this.productRepository.findAll(PageRequest.of(page-1,size));
 
         List<ProductDTO> productDTOS = productPage.getContent().stream().map(product -> this.productMapper.toDto(product)).collect(Collectors.toList());
 

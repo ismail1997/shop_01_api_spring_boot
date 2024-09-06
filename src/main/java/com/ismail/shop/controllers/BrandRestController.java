@@ -48,7 +48,7 @@ public class BrandRestController {
 
     @GetMapping("/page-brands")
     public BrandPageDTO getPageOfBrands(
-            @RequestParam(name = "page",defaultValue = "0") int page ,
+            @RequestParam(name = "page",defaultValue = "1") int page ,
             @RequestParam(name = "size", defaultValue = "10") int size ){
         return  this.brandService.getPageOfBrands(page,size);
     }

@@ -57,9 +57,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryPageDTO getPageOfCategories(int page, int size)
     {
-        if(page< 0) page = 0;
+        if(page<= 0) page = 1;
         if(size<0) size = 10;
-        Page<Category> categoryPage = this.categoryRepository.findAll(PageRequest.of(page,size));
+        Page<Category> categoryPage = this.categoryRepository.findAll(PageRequest.of(page-1,size));
 
         List<CategoryDTO> categoryDTOS = categoryPage.getContent()
                 .stream().map(category -> this.mapper.fromEntity(category)).collect(Collectors.toList());

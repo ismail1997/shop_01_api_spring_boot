@@ -36,7 +36,7 @@ public class CategoryRestController {
     }
 
     @GetMapping("/page-categories")
-    public CategoryPageDTO getPageOfCategories( @RequestParam(name = "page",defaultValue = "0") int page ,
+    public CategoryPageDTO getPageOfCategories( @RequestParam(name = "page",defaultValue = "1") int page ,
                                                 @RequestParam(name = "size", defaultValue = "10") int size){
         return this.categoryService.getPageOfCategories(page,size);
     }

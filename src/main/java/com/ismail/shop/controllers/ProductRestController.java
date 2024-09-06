@@ -32,7 +32,7 @@ public class ProductRestController {
     }
 
     @GetMapping("/page-products")
-    public ProductPageDTO getPageOfProducts( @RequestParam(name = "page",defaultValue = "0") int page ,
+    public ProductPageDTO getPageOfProducts( @RequestParam(name = "page",defaultValue = "1") int page ,
                                              @RequestParam(name = "size", defaultValue = "10") int size){
         return this.service.getPageOfProducts(page,size);
     }

@@ -59,7 +59,7 @@ public class UserRestController {
 
     @GetMapping("/page-users")
     public UserPageDTO getPageOfUsers(
-            @RequestParam(name = "page",defaultValue = "0") int page ,
+            @RequestParam(name = "page",defaultValue = "1") int page ,
             @RequestParam(name = "size", defaultValue = "10") int size ){
         return  this.userService.getPageOfUsers(page,size);
     }
